@@ -1,4 +1,6 @@
+# Класс для слежения
 
+# python imports
 import cv2
 import numpy as np
 import math
@@ -6,7 +8,6 @@ from MarkerPose import MarkerPose
 
 
 class MarkerTracker:
-
     def __init__(self, order, kernel_size, scale_factor):
         self.kernel_size = kernel_size
         (kernel_real, kernel_imag) = self.generate_symmetry_detector_kernel(order, kernel_size)
@@ -41,7 +42,7 @@ class MarkerTracker:
     # Simmetrichni detektor
     @staticmethod
     def generate_symmetry_detector_kernel(order, kernel_size):
-        # type: (int, int) -> numpy.ndarray
+
         value_range = np.linspace(-1, 1, kernel_size)
         temp1 = np.meshgrid(value_range, value_range)
         kernel = temp1[0] + 1j * temp1[1]
