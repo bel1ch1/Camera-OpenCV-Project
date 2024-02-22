@@ -2,49 +2,50 @@
 
 # python imports
 import cv2
-import math
+import math # необходимо убрать
 import numpy as np
-from pyModbusTCP.server import ModbusServer, DataBank
-from time import sleep
+from pyModbusTCP.server import ModbusServer, DataBank # подключение к серверу
+from time import sleep # непонятен смысл
 
-
+# добавле ние финкций
 from PerspectiveTransform import PerspectiveCorrecter
 from MarkerPose import MarkerPose
 from MarkerTracker import MarkerTracker
 
-# parametr
+# parametr ?
 show_image = True
-list_of_markers_to_find = [4] #zadaetsa marker 4 stupeni
+list_of_markers_to_find = [4]  # Список проверяемых ступеней ?
 get_images_to_flush_cam_buffer = 5
-server = ModbusServer("10.131.115.144", 1234, no_block=True)
+server = ModbusServer("10.131.115.144", 1234, no_block=True) # подключение к серверу
 
 
 class CameraDriver:
-
     def __init__(self, marker_orders=[4], default_kernel_size=21, scaling_parameter=2500, downscale_factor=1):
 
         if show_image is True:
-            cv2.namedWindow('filterdemo', cv2.WINDOW_AUTOSIZE) 
+            cv2.namedWindow('filterdemo', cv2.WINDOW_AUTOSIZE)
 
-        # Vibor kamera
-        self.camera = cv2.VideoCapture(0)
-        self.set_camera_resolution()
+        # Выбор камеры не обходимо вынести это в отдельныое пространство
+        self.camera = cv2.VideoCapture(0)   # выбор первой камеры
+        self.set_camera_resolution()        # устанавливает разрешение камеры
 
-        # Hranenie peremen
-        self.current_frame = None
-        self.processed_frame = None
-        self.running = True
-        self.downscale_factor = downscale_factor
+        # Промежуточные переменные
+        self.current_frame = None   # текущий кадр
+        self.processed_frame = None # обработанныей кадр
+        self.running = True         # выполнение ?
+        self.downscale_factor = downscale_factor # понижение чего-то
 
         # Treker
-        self.trackers = []
-        self.old_locations = []
+        self.trackers = []      # переменная накопления для значений temp
+        self.old_locations = [] # Прошлая позиция ?
 
+###############################################################################################################
         for marker_order in marker_orders:
             temp = MarkerTracker(marker_order, default_kernel_size, scaling_parameter)
             temp.track_marker_with_missing_black_leg = False
             self.trackers.append(temp)
             self.old_locations.append(MarkerPose(None, None, None, None, None))
+################################################################################################################
 
     def set_camera_resolution(self):
 	    #zadaetsa razreshenie
@@ -56,10 +57,12 @@ class CameraDriver:
         for k in range(get_images_to_flush_cam_buffer):
             self.current_frame = self.camera.read()[1]
 
+    # обработка кадра
     def process_frame(self):
         self.processed_frame = self.current_frame
         # Poisk markera
         frame_gray = cv2.cvtColor(self.current_frame, cv2.COLOR_RGB2GRAY) #perehod v seroe
+        # меняем размер
         reduced_image = cv2.resize(frame_gray, (0, 0), fx=1.0/self.downscale_factor, fy=1.0 / self.downscale_factor)
         for k in range(len(self.trackers)):
             # Previous marker location is unknown, search in the entire image.
@@ -67,6 +70,7 @@ class CameraDriver:
             self.old_locations[k] = self.trackers[k].pose
             self.old_locations[k].scale_position(self.downscale_factor)
 
+    # Рисуем контуры
     def draw_detected_markers(self):
 	    #oboznachit marker
         for k in range(len(self.trackers)):
