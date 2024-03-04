@@ -1,20 +1,16 @@
-# Определитель маркеров на видео
+# Определитель маркеров на видео, самое важное
 
 
 # подключаем библиотеки
 import cv2
-import numpy as np
-import os
-
 
 # Метод выполнят поиск маркеров и рисует контуры
-def findArucoMarkers(img, markerSize = 5, totalMarkers=50, draw=True):
+def findArucoMarkers(img, draw=True):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    key = getattr(cv2.aruco, f'DICT_{markerSize}X{markerSize}_{totalMarkers}')
-    arucoDict = cv2.aruco.getPredefinedDictionary(key)
+    #negative = cv2.bitwise_not(img) # вариант использования со специальными маркерами
+    arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
     arucoParam = cv2.aruco.DetectorParameters()
     corners, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict, parameters = arucoParam)
-    # print(ids)
     if draw:
         cv2.aruco.drawDetectedMarkers(img, corners)
     return [corners, ids]

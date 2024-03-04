@@ -1,22 +1,28 @@
 import cv2
-import numpy as np
-import os
-def findArucoMarkers(img, markerSize = 5, totalMarkers=50, draw=True):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    key = getattr(cv2.aruco, f'DICT_{markerSize}X{markerSize}_{totalMarkers}')
-    arucoDict = cv2.aruco.getPredefinedDictionary(key)
-    arucoParam = cv2.aruco.DetectorParameters()
-    bboxs, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict, parameters = arucoParam)
-    print(ids)
-    if draw:
-        cv2.aruco.drawDetectedMarkers(img, bboxs)
-cap = cv2.VideoCapture(0)
-while True:
-    success, img = cap.read()
-    findArucoMarkers(img)
-    cv2.imshow('img',img)
-    k = cv2.waitKey(30) & 0xff
-    if k == 27:
+
+# Загрузка видеофайла
+cap = cv2.VideoCapture('video.mp4')
+
+while cap.isOpened():
+    ret, frame = cap.read()
+
+    if not ret:
         break
+
+    # Преобразование изображения в оттенки серого
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Пример кода для поиска фрактальных маркеров с использованием алгоритма FAST
+    fast = cv2.FastFeatureDetector_create()
+    keypoints = fast.detect(gray, None)
+
+    # Отрисовка фрактальных маркеров на изображении
+    frame_with_keypoints = cv2.drawKeypoints(frame, keypoints, None, color=(255,0,0))
+
+    cv2.imshow('Fractal Markers', frame_with_keypoints)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
 cap.release()
 cv2.destroyAllWindows()
