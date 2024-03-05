@@ -1,10 +1,10 @@
 # python imports
 import cv2
-import math 
+import math
 import numpy as np
 
 show_image = True
-list_of_markers_to_find = [4] 
+list_of_markers_to_find = [4]
 get_images_to_flush_cam_buffer = 5
 
 
@@ -19,7 +19,7 @@ class CameraDriver:
         self.camera = cv2.VideoCapture(0)   # выбор первой камеры
         # Размер зафвата камеры
         self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)       
+        self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
         # Промежуточные переменные
         self.current_frame = None   # текущий кадр
@@ -29,7 +29,7 @@ class CameraDriver:
 
         # Treker
         self.trackers = []      # переменная накопления для значений temp
-        self.old_locations = [] # Прошлая позиция 
+        self.old_locations = [] # Прошлая позиция
 
         for marker_order in marker_orders: # for i in range([4])
             temp = MarkerTracker(marker_order, default_kernel_size, scaling_parameter)
@@ -97,7 +97,7 @@ class CameraDriver:
 
 
     def return_positions(self):
-        return self.old_locations  
+        return self.old_locations
 
 ### дальше идет магия (не ходить)
 class MarkerPose:
@@ -269,3 +269,43 @@ class MarkerTracker:
 
         return bright_regions, dark_regions
 
+if __name__ == "__main__":
+    cd = CameraDriver(list_of_markers_to_find, default_kernel_size=55, scaling_parameter=1000, downscale_factor=1)  # Best in robolab.
+    # cd = ImageDriver(list_of_markers_to_find, defaultKernelSize = 21)
+
+    # Kalibrovka
+    reference_point_locations_in_image = [[1328, 340], [874, 346], [856, 756], [1300, 762]]
+    reference_point_locations_in_world_coordinates = [[0, 0], [300, 0], [300, 250], [0, 250]]
+    #perspective_corrector = PerspectiveCorrecter(reference_point_locations_in_image,
+                                                 #reference_point_locations_in_world_coordinates)
+
+    print("Start server...")
+    #server.start()
+    print("Server is online")
+    state = [0]
+
+    while cd.running:
+        cd.get_image()
+        cd.process_frame()
+        cd.draw_detected_markers()
+        cd.show_processed_frame()
+        cd.handle_keyboard_events()
+        y = cd.return_positions()
+
+
+        # for k in range(len(y)):
+        #     try:
+        #         # pose_corrected = perspective_corrector.convertPose(y[k])
+        #         pose_corrected = y[k]
+		# DataBank.set_words(1, [int(pose_corrected.x)])
+		# DataBank.set_words(2, [int(pose_corrected.y)])
+		#         #pechat
+        #         print("%8.3f %8.3f %8.3f %8.3f %s" % (pose_corrected.x,
+        #                                                 pose_corrected.y,
+        #                                                 pose_corrected.theta,
+        #                                                 pose_corrected.quality,
+        #                                                 pose_corrected.order))
+        #     except Exception as e:
+        #         print("%s" % e)
+
+    print("Stopping")

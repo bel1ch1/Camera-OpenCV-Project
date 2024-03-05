@@ -7,14 +7,16 @@ import cv2
 # Метод выполнят поиск маркеров и рисует контуры
 def findArucoMarkers(img, draw=True):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Калибруем
+    grayRoi = gray[120:360,160:480]
 
-    #negative = cv2.bitwise_not(img) # вариант использования со специальными маркерами
     arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
     arucoParam = cv2.aruco.DetectorParameters()
-    corners, ids, rejected = cv2.aruco.detectMarkers(gray, arucoDict, parameters = arucoParam)
+    corners, ids, rejected = cv2.aruco.detectMarkers(grayRoi, arucoDict, parameters = arucoParam)
     if draw:
-        cv2.aruco.drawDetectedMarkers(img, corners)
-    return [corners, ids]
+
+       # cv2.aruco.drawDetectedMarkers(img, corners)
+        return [corners, ids]
 
 # захват видео с камеры и обработка
 cap = cv2.VideoCapture(0)

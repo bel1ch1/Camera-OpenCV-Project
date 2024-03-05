@@ -5,7 +5,7 @@ import cv2
 import math # необходимо убрать
 import numpy as np
 from pyModbusTCP.server import ModbusServer, DataBank # подключение к серверу
-from time import sleep # непонятен смысл
+from time import sleep
 
 # добавле ние финкций
 from PerspectiveTransform import PerspectiveCorrecter
@@ -132,20 +132,20 @@ def main():
         y = cd.return_positions()
 
 
-        # for k in range(len(y)):
-        #     try:
-        #         # pose_corrected = perspective_corrector.convertPose(y[k])
-        #         pose_corrected = y[k]
-		# DataBank.set_words(1, [int(pose_corrected.x)])
-		# DataBank.set_words(2, [int(pose_corrected.y)])
-		#         #pechat
-        #         print("%8.3f %8.3f %8.3f %8.3f %s" % (pose_corrected.x,
-        #                                                 pose_corrected.y,
-        #                                                 pose_corrected.theta,
-        #                                                 pose_corrected.quality,
-        #                                                 pose_corrected.order))
-        #     except Exception as e:
-        #         print("%s" % e)
+        for k in range(len(y)):
+            try:
+                # pose_corrected = perspective_corrector.convertPose(y[k])
+                pose_corrected = y[k]
+		#DataBank.set_words(1, [int(pose_corrected.x)])
+		#DataBank.set_words(2, [int(pose_corrected.y)])
+		        #pechat
+                print("%8.3f %8.3f %8.3f %8.3f %s" % (pose_corrected.x,
+                                                        pose_corrected.y,
+                                                        pose_corrected.theta,
+                                                        pose_corrected.quality,
+                                                        pose_corrected.order))
+            except Exception as e:
+                print("%s" % e)
 
     print("Stopping")
 
