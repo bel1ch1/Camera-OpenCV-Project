@@ -14,7 +14,7 @@ try:
     state = [0]
     while True:
         DataBank.set_words(1, [int(uniform(0, 100))])
-	DataBank.set_words(2, [int(200)])
+        DataBank.set_words(2, [int(200)])
         if state != DataBank.get_words(1):
             state = DataBank.get_words(1)
             print("Value of Register 1 has changed to " +str(state))
@@ -25,5 +25,3 @@ except:
     print("Shutdown server ...")
     server.stop()
     print("Server is offline")
-
-
