@@ -1,4 +1,4 @@
-# Определитель маркеров на видео, самое важное
+# Определитель маркеров на видео
 
 
 # подключаем библиотеки
@@ -16,23 +16,24 @@ def findArucoMarkers(img, draw=True):
     if draw:
         return [corners, ids]
 
-# захват видео с камеры и обработка
-cap = cv2.VideoCapture(0)
-while True:
-    success, img = cap.read()
-    if not success:
-        break
-    # Когда сможешь посчитать на GPU
-    # ratio = (1920, 1080)
-    # imgResize = cv2.resize(img, ratio, interpolation= cv2.INTER_LINEAR)
+if __name__ == "__main__":
+    # захват видео с камеры и обработка
+    cap = cv2.VideoCapture(0)
+    while True:
+        success, img = cap.read()
+        if not success:
+            break
+        # Когда сможешь посчитать на GPU
+        # ratio = (1920, 1080)
+        # imgResize = cv2.resize(img, ratio, interpolation= cv2.INTER_LINEAR)
 
-    arucofound = findArucoMarkers(img)
-    if len(arucofound[0])!=0:
-        for corner, id in zip(arucofound[0], arucofound[1]):
-            print(corner)
-    cv2.imshow('img',img)
-    k = cv2.waitKey(30) & 0xff
-    if k == 27:
-        break
-cap.release()
-cv2.destroyAllWindows()
+        arucofound = findArucoMarkers(img)
+        if len(arucofound[0])!=0:
+            for corner, id in zip(arucofound[0], arucofound[1]):
+                print(corner)
+        cv2.imshow('img',img)
+        k = cv2.waitKey(30) & 0xff
+        if k == 27:
+            break
+    cap.release()
+    cv2.destroyAllWindows()

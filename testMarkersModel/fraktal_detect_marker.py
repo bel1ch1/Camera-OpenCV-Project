@@ -1,7 +1,7 @@
 import cv2
 
-# Загрузка видеофайла
-cap = cv2.VideoCapture('video.mp4')
+
+cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
     ret, frame = cap.read()
