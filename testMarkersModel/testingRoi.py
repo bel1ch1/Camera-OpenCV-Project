@@ -3,6 +3,7 @@
 
 # подключаем библиотеки
 import cv2
+import numpy as np
 
 # Метод выполнят поиск маркеров и рисует контуры
 def findArucoMarkers(img, draw=True):
@@ -26,8 +27,12 @@ if __name__ == "__main__":
         # Когда сможешь посчитать на GPU
         # ratio = (1920, 1080)
         # imgResize = cv2.resize(img, ratio, interpolation= cv2.INTER_LINEAR)
+        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
 
-        arucofound = findArucoMarkers(img)
+        # резкость 
+        sharpened_image = cv2.filter2D(img, -1, kernel)
+
+        arucofound = findArucoMarkers(sharpened_image)
         if len(arucofound[0])!=0:
             for corner, id in zip(arucofound[0], arucofound[1]):
                 print(corner)
