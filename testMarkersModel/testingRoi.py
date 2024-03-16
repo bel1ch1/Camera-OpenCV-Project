@@ -29,7 +29,7 @@ if __name__ == "__main__":
         # imgResize = cv2.resize(img, ratio, interpolation= cv2.INTER_LINEAR)
         kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
 
-        # резкость 
+        # резкость
         sharpened_image = cv2.filter2D(img, -1, kernel)
 
         arucofound = findArucoMarkers(sharpened_image)
