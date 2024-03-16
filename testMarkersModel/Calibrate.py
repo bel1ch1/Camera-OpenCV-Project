@@ -9,7 +9,7 @@ objp[:, :2] = np.mgrid[0:6, 0:6].T.reshape(-1, 2)
 # Arrays to store object points and image points from all the images.
 objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
-images = glob.glob('E:\\Program\\Python\\OpenCV-test\\Chessboard\\*.png')
+images = glob.glob('C:\SomeStaff\Camera-OpenCV-Project\testMarkersModel\images*.png')
 i = 0
 for fname in images:
     img = cv.imread(fname)
