@@ -1,5 +1,4 @@
-# Определитель маркеров на видео, самое важное
-
+# Определитель маркеров на видео
 
 # подключаем библиотеки
 import cv2
@@ -16,9 +15,10 @@ def findArucoMarkers(img, draw=True):
         cv2.aruco.drawDetectedMarkers(img, corners)
     return [corners, ids]
 
-# захват видео с камеры и обработка
-cap = cv2.VideoCapture('rtsp://Administrator:2545@192.168.0.10:555/Streaming/channels/1')
+# захват видео с камеры
+cap = cv2.VideoCapture('rtsp://admin:Camera12@192.168.0.10:8000')
 #cap = cv2.VideoCapture(0)
+# Обработка видео
 while True:
     success, img = cap.read()
     arucofound = findArucoMarkers(img)
