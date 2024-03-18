@@ -1,19 +1,25 @@
-# Фоткаем с интервалом
 import cv2
-import numpy as np
 
 cap = cv2.VideoCapture(0)
 
-if cap.isOpened() is True:
-    i = 0
-    while(True):
-        ret, frame = cap.read()
-        gray = cv2.cvtColor (frame, cv2.COLOR_BGR2GRAY)
-        cv2.imshow('frame', gray)
-        if i % 50 == 0:
-            cv2.imwrite('C:\SomeStaff\Camera-OpenCV-Project\testMarkersModel\images' + str(i) + '.png', gray)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        i += 1
-    cap.release()
-    cv2.destroyAllWindows()
+num = 0
+
+while cap.isOpened():
+
+    succes, img = cap.read()
+
+    k = cv2.waitKey(5)
+
+    if k == 27:
+        break
+    elif k == ord('s'): # wait for 's' key to save and exit
+        cv2.imwrite('images/img' + str(num) + '.png', img)
+        print("image saved!")
+        num += 1
+
+    cv2.imshow('Img',img)
+
+# Release and destroy all windows before termination
+cap.release()
+
+cv2.destroyAllWindows()
