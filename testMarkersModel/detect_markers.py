@@ -16,7 +16,7 @@ def findArucoMarkers(img, draw=True):
     return [corners, ids]
 
 # захват видео с камеры
-cap = cv2.VideoCapture('rtsp://admin:Camera12@192.168.0.10:8000')
+cap = cv2.VideoCapture(0)
 #cap = cv2.VideoCapture(0)
 # Обработка видео
 while True:
