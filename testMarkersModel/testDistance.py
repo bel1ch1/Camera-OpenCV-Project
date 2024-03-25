@@ -32,24 +32,33 @@ def pose_esitmation(img, arucoDict):
         distance_to_marker = np.sqrt(
                         tvec ** 2 + tvec ** 2 + tvec ** 2
                     )
-        # Вывод в консоль
+
+        # координаты и дистанция
         c1 = corners[0][0][0]
         c2 = corners[0][0][1]
         c3 = corners[0][0][2]
         c4 = corners[0][0][3]
-        #print(c1[:1], c2[:1], c3[:1], c4[:1])
         d = distance_to_marker[0][0]
-
+        # Вывод в консоль
         print(c1, c2, c3, c4, d[:1])
-    #return [c1[:1], c2[:1], c3[:1], c4[:1]]
         return f"1 {c1[:1]},\n2 {c2[:1]},\n3 {c3[:1]},\n4 {c4[:1]},\ndistance {d[:1]}"
 
 
+# Составляющие веб-страницы
+# main
 st.title("corners coords distasnce")
-pose_estmition_data_area = st.empty()
-frame_placeholder = st.empty()
-stop_btn_pressed = st.button("Stop")
+col1, col2 = st.columns(2)
+with col1:
+    frame_placeholder = st.empty()
+with col2:
+    pose_estmition_data_area = st.empty()
 start_btn_pressed = st.button("Start")
+stop_btn_pressed = st.button("Stop")
+# sidebar
+with st.sidebar:
+    st.button("Log In")
+    st.button("Register")
+
 
 
 # захват видео с камеры и обработка
@@ -61,12 +70,13 @@ if start_btn_pressed:
         if not success:
             break
 
-        #pose_esitmation(frame, ARUCO_DICT)
+        # Вывод видео
         frame_placeholder.image(frame, channels="BGR")
+        # Вывод координат и дистанции
         output=pose_esitmation(frame, ARUCO_DICT)
         pose_estmition_data_area.text(f"data\n{output}")
-        #cv2.imshow("frame", frame)
 
+        # Остановка вывода
         k = cv2.waitKey(30) & 0xff
         if k == 27 or stop_btn_pressed:
             break
