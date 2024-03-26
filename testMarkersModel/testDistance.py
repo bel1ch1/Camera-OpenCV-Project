@@ -12,7 +12,7 @@ with open('cameraMatrix.pkl', 'rb') as g:
 
 
 # Константы
-MARKER_SIZE_CM = 16.5 # Размер маркера
+MARKER_SIZE_M = 0.165 # Размер маркера
 ARUCO_DICT = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50) # набор маркеров
 
 # Параметры
@@ -27,21 +27,23 @@ def pose_esitmation(img, arucoDict):
     # если нашли
     if corners:
         # Определяем сдвиг
-        _ , tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, MARKER_SIZE_CM, cam_mat, dist_coef)
+        _ , tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, MARKER_SIZE_M, cam_mat, dist_coef)
         # Определяем дистанцию до маркера
-        distance_to_marker = np.sqrt(
-                        tvec ** 2 + tvec ** 2 + tvec ** 2
-                    )
+        # distance_to_marker = np.sqrt(
+        #                 tvec ** 2 + tvec ** 2 + tvec ** 2
+        #             )
+
+        distance_to_marker = np.linalg.norm(tvec)
 
         # координаты и дистанция
         c1 = corners[0][0][0]
         c2 = corners[0][0][1]
         c3 = corners[0][0][2]
         c4 = corners[0][0][3]
-        d = distance_to_marker[0][0]
+        d = distance_to_marker#[0][0]
         # Вывод в консоль
-        print(c1, c2, c3, c4, d[:1])
-        return f"1 {c1[:1]},\n2 {c2[:1]},\n3 {c3[:1]},\n4 {c4[:1]},\ndistance {d[:1]}"
+        print(c1, c2, c3, c4, d)
+        return f"1 {c1[:1]},\n2 {c2[:1]},\n3 {c3[:1]},\n4 {c4[:1]},\ndistance {d}"
 
 
 # Составляющие веб-страницы
