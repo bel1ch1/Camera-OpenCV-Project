@@ -28,22 +28,17 @@ def pose_esitmation(img, arucoDict):
     if corners:
         # Определяем сдвиг
         _ , tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, MARKER_SIZE_M, cam_mat, dist_coef)
-        # Определяем дистанцию до маркера
-        # distance_to_marker = np.sqrt(
-        #                 tvec ** 2 + tvec ** 2 + tvec ** 2
-        #             )
+
 
         distance_to_marker = np.linalg.norm(tvec)
 
         # координаты и дистанция
-        c1 = corners[0][0][0]
-        c2 = corners[0][0][1]
-        c3 = corners[0][0][2]
-        c4 = corners[0][0][3]
-        d = distance_to_marker#[0][0]
+        c1x = corners[0][0][0][0]
+        c1y = corners[0][0][0][1]
+        d = distance_to_marker
         # Вывод в консоль
-        print(c1, c2, c3, c4, d)
-        return f"1 {c1[:1]},\n2 {c2[:1]},\n3 {c3[:1]},\n4 {c4[:1]},\ndistance {d}"
+        print(c1x, c1y, d)
+        return f"X = {c1x},\nY = {c1y},\ndistance {d}"
 
 
 # Составляющие веб-страницы
@@ -56,11 +51,6 @@ with col2:
     pose_estmition_data_area = st.empty()
 start_btn_pressed = st.button("Start")
 stop_btn_pressed = st.button("Stop")
-# sidebar
-with st.sidebar:
-    st.button("Log In")
-    st.button("Register")
-
 
 
 # захват видео с камеры и обработка
@@ -76,7 +66,7 @@ if start_btn_pressed:
         frame_placeholder.image(frame, channels="BGR")
         # Вывод координат и дистанции
         output=pose_esitmation(frame, ARUCO_DICT)
-        pose_estmition_data_area.text(f"data\n{output}")
+        pose_estmition_data_area.text(f"Coords and distance\n{output}")
 
         # Остановка вывода
         k = cv2.waitKey(30) & 0xff
